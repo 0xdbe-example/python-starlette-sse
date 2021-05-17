@@ -1,0 +1,42 @@
+<html>
+<head>
+    <title>Server-sent events demo</title>
+</head>
+
+<body>
+    <h1>Server-Sent Event:</h1>
+    <button id="StopButton">Close the connection</button>
+    <ul id="list"></ul>
+
+    <script>
+        const source = new EventSource('stream');
+
+        source.addEventListener('message', function(e) {
+            console.log(e);
+            var ul = document.getElementById('list')
+            var li = document.createElement('li');
+            li.appendChild(document.createTextNode(e.data));
+            ul.appendChild(li);
+        }, false);
+
+        source.addEventListener('open', function(e) {
+            console.log(e);
+            console.log("Connection was open");
+        }, false);
+
+        source.addEventListener('error', function(e) {
+        if (e.readyState == EventSource.CLOSED) {
+            console.log(e);
+            console.log("Connection was closed");
+        }
+        }, false);
+
+        var button = document.querySelector('button');
+        button.onclick = function() {
+            console.log('Connection closed');
+            source.close();
+        }
+    </script>
+</body>
+
+</html>
